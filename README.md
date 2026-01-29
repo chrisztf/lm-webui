@@ -5,7 +5,22 @@
 </p>
 
 <p align="center">
-  <!-- badges here -->
+  <a href="https://github.com/lm-webui/lm-webui/actions">
+    <img src="https://img.shields.io/badge/development-active-green" />
+  </a>
+  <a href="https://github.com/lm-webui/lm-webui/releases">
+    <img src="https://img.shields.io/badge/release-v0.1.0-blue" />
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-black" />
+  </a>
+  <a href="https://lmwebui.com">
+    <img src="https://img.shields.io/badge/Website-lmwebui.com-orange" />
+  </a>
+</p>
+
+<p align="center">
+  <b>Run AI on your control</b>
 </p>
 
 ---
@@ -40,7 +55,7 @@ This makes lm-webui suitable for internal tools, regulated environments, proprie
 
 | Category                   | Capabilities                                                                                 |
 | -------------------------- | -------------------------------------------------------------------------------------------- |
-| **Multimodal Interface**   | Text, document, and multimodal input handling within a unified UI                            |
+| **Multimodal Interface**   | Text, document, and image input handling within a unified UI                            |
 | **RAG Engine**             | Configurable retrieval pipelines with local vector stores and source attribution             |
 | **Model‑Agnostic Runtime** | Run local models or API-based LLMs through a consistent orchestration layer                  |
 | **Full Local Capability**  | End‑to‑end local execution: models, embeddings, storage, and inference                       |
@@ -54,12 +69,12 @@ This makes lm-webui suitable for internal tools, regulated environments, proprie
 
 ## Roadmap & Known Limitations
 
-This project is evolving toward a stable, production-grade release. The following outlines current limitations and planned improvements.
+This project is evolving toward a stable release. The following outlines current limitations and planned improvements.
 
 ### Known Limitations
 
-* Some model backends and multimodal pipelines are still experimental
-* Some chat dan multimodal conversation are still buggy and under improvement
+* Some multimodal pipelines are still experimental
+* Some multimodal conversation are still buggy and under improvement
 * Hardware acceleration behavior may vary across GPU vendors and driver versions
 * RAG source attribution and metadata handling are functional but not yet fully standardized
 * Limited validation and guardrails for misconfigured local models or incompatible GGUF variants
@@ -83,7 +98,7 @@ This project is evolving toward a stable, production-grade release. The followin
 
 * Advanced scheduling for multi-GPU and multi-model workloads
 * Adapter / LoRA management for task-specific fine-tuning
-* Enterprise-oriented features (role-based access, audit logs, policy controls)
+* More Enterprise-oriented features (audit logs, policy controls, etc)
 
 ---
 
