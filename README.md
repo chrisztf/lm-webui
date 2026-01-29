@@ -1,4 +1,4 @@
-# LM-WebuUI
+# LM WebUI
 
 <p align="center">
   <img src="./assets/demo.png" width="1080" />
@@ -35,35 +35,18 @@ It unifies local and API-based models, RAG pipelines, and multimodal inputs unde
 Built for developers, system integrators, and organizations that require **local inference, reproducibility, and infrastructure-level control**, lm-webui bridges the gap between experimental LLM tooling and production-ready AI systems.
 
 ---
+## Core Features of LM WebUI ⚡ 
 
-## Privacy, Security & Offline-First Design
-
-lm-webui is designed around environments where **data control and execution locality are non-negotiable**.
-
-* 🔒 **Privacy-first by design** — prompts, documents, embeddings, and outputs remain local by default
-* 📡 **Fully offline capable** — operate without internet access using local models and on-device inference
-* 🏠 **Self-hosted architecture** — deploy on personal machines, servers, private clouds, or air‑gapped networks
-* 🚫 **No mandatory telemetry** — no external tracking or data collection required
-* 🧾 **Source-aware retrieval** — RAG responses can expose document origin and metadata for auditability
-* ⚙️ **Controlled execution** — model runtimes and tools are explicitly configured and isolated
-
-This makes lm-webui suitable for internal tools, regulated environments, proprietary data workflows, and edge deployments.
-
----
-
-## Core Features
-
-| Category                   | Capabilities                                                                                 |
+| Feature                   | Capabilities                                                                                 |
 | -------------------------- | -------------------------------------------------------------------------------------------- |
-| **Multimodal Interface**   | Text, document, and image input handling within a unified UI                            |
-| **RAG Engine**             | Configurable retrieval pipelines with local vector stores and source attribution             |
-| **Model‑Agnostic Runtime** | Run local models or API-based LLMs through a consistent orchestration layer                  |
-| **Full Local Capability**  | End‑to‑end local execution: models, embeddings, storage, and inference                       |
-| **GGUF Loader Engine**   | Built‑in model deployment engine for GGUF-based local models, including quantized variants   |
-| **Hardware Acceleration**  | Automatic hardware detection and optimized execution on CPU, GPU, and supported accelerators |
-| **Backend Flexibility**    | Compatible with multiple inference backends (e.g., llama.cpp‑style runtimes)                 |
-| **Workflow Orchestration** | Chain prompts, tools, retrieval, and models into reproducible workflows                      |
-| **Self‑Hosted Ready**      | Designed for on‑prem, private cloud, and isolated network deployments                        |
+| ✨ **Multimodal Interface**   | Create Image, process docs, and text input, easily handling under a unified chat               |
+| 🔒 **Privacy-first by design** | prompts, documents, embeddings, and outputs remain local by default                  |
+| 🔗 **RAG Engine**             | Configurable retrieval pipelines with local vector stores and source attribution             |
+| 🤝 **Model‑Agnostic** | Run local models or API-based LLMs through a smart model selector                  |
+| 🤗 **GGUF Loader Engine**   | Built‑in model deployment engine for GGUF-based local models, including quantized variants   |
+| 🛠️ **Hardware Acceleration**  | Automatic hardware detection and optimized execution on CPU, GPU, and supported accelerators |
+| ⚙️ **Workflow Orchestration** | Chain prompts, tools, retrieval, and models into reproducible workflows                      |
+| 🏠 **Self‑Hosted Ready**      | Efortless on‑prem, private cloud, and isolated network deployments                        |
 
 ---
 
