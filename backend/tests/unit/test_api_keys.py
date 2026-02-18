@@ -1,0 +1,212 @@
+import pytest
+from fastapi.testclient import TestClient
+from unittest.mock import patch, MagicMock
+import time
+
+class TestAPIKeys:
+    """Test API key management endpoints"""
+    
+    def test_add_api_key(self, client):
+        """Test adding an API key"""
+        # First register and login to get token
+        user_data = {
+            "username": f"apikeyuser_{int(time.time())}",
+            "password": "testpass123",
+            "device_id": "test-device"
+        }
+        client.post("/auth/register", json=user_data)
+        
+        login_data = {
+            "username": user_data["username"],
+            "password": "testpass123",
+            "remember_me": True,
+            "device_id": "test-device"
+        }
+        login_response = client.post("/auth/login", json=login_data)
+        token = login_response.json()["access_token"]
+        
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        # Add API key
+        key_data = {
+            "provider": "openai",
+            "api_key": "sk-test1234567890abcdefghijklmnopqrstuvwxyz"
+        }
+        
+        response = client.post("/api/api_keys", json=key_data, headers=headers)
+        assert response.status_code == 200
+        assert "message" in response.json()
+        assert response.json()["message"] == "API key added successfully"
+    
+    def test_list_api_keys(self, client):
+        """Test listing API keys"""
+        # Register, login, and add a key first
+        user_data = {
+            "username": f"listkeysuser_{int(time.time())}",
+            "password": "testpass123",
+            "device_id": "test-device"
+        }
+        client.post("/auth/register", json=user_data)
+        
+        login_data = {
+            "username": user_data["username"],
+            "password": "testpass123",
+            "remember_me": True,
+            "device_id": "test-device"
+        }
+        login_response = client.post("/auth/login", json=login_data)
+        token = login_response.json()["access_token"]
+        
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        # Add a key
+        key_data = {
+            "provider": "openai",
+            "api_key": "sk-test1234567890abcdefghijklmnopqrstuvwxyz"
+        }
+        client.post("/api/api_keys", json=key_data, headers=headers)
+        
+        # List keys
+        response = client.get("/api/api_keys", headers=headers)
+        assert response.status_code == 200
+        assert "api_keys" in response.json()
+        assert len(response.json()["api_keys"]) > 0
+    
+    def test_get_specific_api_key(self, client):
+        """Test getting a specific API key"""
+        # Register, login, and add a key first
+        user_data = {
+            "username": f"getkeyuser_{int(time.time())}",
+            "password": "testpass123",
+            "device_id": "test-device"
+        }
+        client.post("/auth/register", json=user_data)
+        
+        login_data = {
+            "username": user_data["username"],
+            "password": "testpass123",
+            "remember_me": True,
+            "device_id": "test-device"
+        }
+        login_response = client.post("/auth/login", json=login_data)
+        token = login_response.json()["access_token"]
+        
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        # Add a key
+        key_data = {
+            "provider": "openai",
+            "api_key": "sk-test1234567890abcdefghijklmnopqrstuvwxyz"
+        }
+        client.post("/api/api_keys", json=key_data, headers=headers)
+        
+        # Get the specific key
+        response = client.get("/api/api_keys/openai", headers=headers)
+        assert response.status_code == 200
+        assert "provider" in response.json()
+        assert response.json()["provider"] == "openai"
+    
+    def test_delete_api_key(self, client):
+        """Test deleting an API key"""
+        # Register, login, and add a key first
+        user_data = {
+            "username": f"deletekeyuser_{int(time.time())}",
+            "password": "testpass123",
+            "device_id": "test-device"
+        }
+        client.post("/auth/register", json=user_data)
+        
+        login_data = {
+            "username": user_data["username"],
+            "password": "testpass123",
+            "remember_me": True,
+            "device_id": "test-device"
+        }
+        login_response = client.post("/auth/login", json=login_data)
+        token = login_response.json()["access_token"]
+        
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        # Add a key
+        key_data = {
+            "provider": "openai",
+            "api_key": "sk-test1234567890abcdefghijklmnopqrstuvwxyz"
+        }
+        client.post("/api/api_keys", json=key_data, headers=headers)
+        
+        # Delete the key
+        response = client.delete("/api/api_keys/openai", headers=headers)
+        assert response.status_code == 200
+        assert "message" in response.json()
+        assert response.json()["message"] == "API key deleted successfully"
+    
+    def test_add_api_key_unauthorized(self, client):
+        """Test adding API key without authentication fails"""
+        key_data = {
+            "provider": "openai",
+            "api_key": "sk-test1234567890abcdefghijklmnopqrstuvwxyz"
+        }
+        
+        response = client.post("/api/api_keys", json=key_data)
+        assert response.status_code == 403  # Unauthorized
+    
+    def test_add_api_key_invalid_provider(self, client):
+        """Test adding API key with invalid provider fails"""
+        # Register and login first
+        user_data = {
+            "username": f"invalidprovider_{int(time.time())}",
+            "password": "testpass123",
+            "device_id": "test-device"
+        }
+        client.post("/auth/register", json=user_data)
+        
+        login_data = {
+            "username": user_data["username"],
+            "password": "testpass123",
+            "remember_me": True,
+            "device_id": "test-device"
+        }
+        login_response = client.post("/auth/login", json=login_data)
+        token = login_response.json()["access_token"]
+        
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        # Try to add key with invalid provider
+        key_data = {
+            "provider": "invalid_provider",
+            "api_key": "sk-test1234567890abcdefghijklmnopqrstuvwxyz"
+        }
+        
+        response = client.post("/api/api_keys", json=key_data, headers=headers)
+        assert response.status_code == 400
+        assert "error" in response.json()
+    
+    def test_add_api_key_empty_key(self, client):
+        """Test adding API key with empty key fails"""
+        # Register and login first
+        user_data = {
+            "username": f"emptykeyuser_{int(time.time())}",
+            "password": "testpass123",
+            "device_id": "test-device"
+        }
+        client.post("/auth/register", json=user_data)
+        
+        login_data = {
+            "username": user_data["username"],
+            "password": "testpass123",
+            "remember_me": True,
+            "device_id": "test-device"
+        }
+        login_response = client.post("/auth/login", json=login_data)
+        token = login_response.json()["access_token"]
+        
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        # Try to add key with empty key
+        key_data = {
+            "provider": "openai",
+            "api_key": ""
+        }
+        
+        response = client.post("/api/api_keys", json=key_data, headers=headers)
+        assert response.status_code == 422  # Validation error

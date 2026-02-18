@@ -1,0 +1,198 @@
+# Getting Started
+
+Welcome to LM WebUI! This guide will help you get up and running quickly.
+
+## Quick Start Options
+
+### Option 1: Docker (Recommended for Beginners)
+
+```bash
+# Clone the repository
+git clone https://github.com/lm-webui/lm-webui.git
+cd lm-webui
+
+# Start all services with Docker Compose
+docker-compose up
+
+# Access the application at http://localhost:5178
+```
+
+### Option 2: Manual Installation (For Developers)
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/lm-webui/lm-webui.git
+cd lm-webui
+
+# 2. Backend setup
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# 3. Frontend setup
+cd ../frontend
+npm install
+
+# 4. Start services
+# Terminal 1: Backend
+cd backend && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+# Terminal 2: Frontend
+cd frontend && npm run dev
+
+# Access at http://localhost:5178
+```
+
+## First Steps
+
+### 1. Create an Account
+
+1. Open `http://localhost:5178` in your browser
+2. Click "Register" to create a new account
+3. Enter your email and password
+4. You'll be automatically logged in after registration
+
+### 2. Configure API Keys (Optional)
+
+If you want to use cloud-based AI models:
+
+1. Go to Settings (gear icon in sidebar)
+2. Navigate to "API Keys" section
+3. Add your OpenAI, Anthropic, or other API keys
+4. Keys are encrypted before storage
+
+### 3. Start Chatting
+
+1. Type your first message in the chat input
+2. Select a model from the dropdown:
+   - **Local models**: GGUF models you've downloaded
+   - **Cloud models**: OpenAI, Anthropic, etc. (requires API keys)
+   - **Ollama**: Local Ollama models if installed
+3. Click send or press Enter
+
+### 4. Try Advanced Features
+
+- **Upload files**: Drag and drop images or documents
+- **Enable streaming**: Toggle "Deep Thinking" mode for step-by-step reasoning
+- **Use RAG**: Enable "Use Context" for retrieval-augmented responses
+- **Download GGUF models**: Go to Models section to download local models
+
+## Basic Configuration
+
+### Environment Variables
+
+Create a `.env` file in the project root:
+
+```bash
+# Frontend (.env in project root)
+VITE_BACKEND_URL=http://localhost:8000
+
+# Backend (backend/.env)
+BACKEND_HOST=0.0.0.0
+BACKEND_PORT=8000
+DATABASE_URL=sqlite:///./data/app.db
+SECRET_KEY=your-secret-key-here
+```
+
+### Configuration File
+
+Create `backend/config.yaml` for advanced configuration:
+
+```yaml
+server:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+
+database:
+  url: "sqlite:///./data/app.db"
+  echo: false
+
+security:
+  jwt_secret_path: ".secrets/jwt_secret"
+  allowed_origins:
+    - "http://localhost:5178"
+    - "http://localhost:8000"
+
+llm:
+  default_model: "gpt-4o-mini"
+  temperature: 0.7
+```
+
+## Common Tasks
+
+### Download a GGUF Model
+
+1. Go to Settings → Models
+2. Click "Download Model"
+3. Enter HuggingFace URL or search for a model
+4. Monitor download progress in real-time
+5. Once downloaded, the model will appear in chat model selection
+
+### Upload Files for Context
+
+1. Drag and drop files into the chat area
+2. Supported formats:
+   - **Images**: PNG, JPG, WebP (OCR text will be extracted)
+   - **Documents**: PDF, DOCX (text content will be extracted)
+3. Files are automatically added to conversation context
+
+### Enable Real-time Streaming
+
+1. Toggle "Deep Thinking" mode in chat settings
+2. Send a message
+3. Watch the AI think step-by-step
+4. You can stop generation at any time
+
+## Troubleshooting Common Issues
+
+### "Backend not responding"
+
+```bash
+# Check if backend is running
+curl http://localhost:8000/health
+
+# If not, start it:
+cd backend && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### "Frontend not loading"
+
+```bash
+# Check if frontend dev server is running
+curl http://localhost:5178
+
+# If not, start it:
+cd frontend && npm run dev
+```
+
+### "Database errors"
+
+```bash
+# Delete and recreate database
+rm -f backend/data/app.db
+cd backend && python -c "from app.database import init_db; init_db()"
+```
+
+### "Port already in use"
+
+```bash
+# Find and kill process using port 8000 or 5178
+lsof -ti:8000 | xargs kill -9
+lsof -ti:5178 | xargs kill -9
+```
+
+## Next Steps
+
+- Read the [Features](./features.md) documentation to learn about all capabilities
+- Check the [API Reference](./api-reference.md) for integration options
+- See [Deployment](./deployment.md) for production setup
+- Review [Contributing](./contributing.md) if you want to help improve LM WebUI
+
+## Need Help?
+
+- Check the [Troubleshooting](./troubleshooting.md) guide
+- Join [GitHub Discussions](https://github.com/lm-webui/lm-webui/discussions)
+- Open an [Issue](https://github.com/lm-webui/lm-webui/issues) for bugs
+- Review the [FAQ](#) for common questions

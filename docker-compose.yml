@@ -1,0 +1,38 @@
+services:
+  lm-webui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lm-webui:production
+    container_name: lm-webui-v1
+    ports:
+      - "7070:8000" # Expose port 8000 (FastAPI backend) to host port 7070
+    volumes:
+      # Persistent System Data (Qdrant, SQLite, Models)
+      - app_data:/data
+      # Persistent User Media (Uploads, Generated Images, Thumbnails)
+      - app_media:/media
+      # Config Override (allows changing config without rebuilding)
+      - ./backend/config.yaml:/backend/config.yaml
+      # Persistent Build Cache (for JIT compilation speedups)
+      - build_cache:/app/persistent_build
+      # Mount models directory for easier model management (Optional, from previous setup)
+      - ./backend/models:/data/models
+      # Mount secrets directory for encryption keys
+      - ./backend/.secrets:/backend/.secrets
+    environment:
+      - HF_HOME=/data/models
+      - CONFIG_PATH=/backend/config.yaml
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  app_data:
+  app_media:
+  build_cache:

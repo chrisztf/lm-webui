@@ -1,0 +1,9 @@
+app_config:
+  data_dir: data
+  host: 0.0.0.0
+  port: 8000
+
+llm_config:
+  model_name: "Default Model"
+  provider: "openai"
+  model: "gpt-4-turbo"
