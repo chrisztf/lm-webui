@@ -137,6 +137,170 @@ A cross-cutting concern that optimizes runtime performance:
 3. **Service Layer Standardization**: Consistent API service patterns
 4. **Component Consolidation**: Reusable UI components with proper prop interfaces
 
+<<<<<<< HEAD
+=======
+---
+
+## Core Features
+
+### 1. 🔐 Authentication & User Management
+
+#### JWT-Based Authentication
+
+- **Stateless authentication** using JSON Web Tokens
+- **Refresh tokens** stored as HTTP-only cookies for security
+- **Role-based access control** with user and admin levels
+- **Session isolation** ensuring conversation privacy
+
+#### User Management
+
+- User registration and login
+- Session management with automatic expiration
+- Conversation isolation per user
+- Secure password hashing with bcrypt
+
+#### Security Features
+
+- Input validation and sanitization
+- Rate limiting protection
+- CSRF protection
+- Secure cookie handling
+
+### 2. 🌐 WebSocket Streaming with Reasoning
+
+- **Bidirectional WebSocket communication** for instant updates
+- **Token-by-token streaming** with controlled pacing (1-2 tokens per message)
+- **Connection health monitoring** with automatic reconnection
+- **Heartbeat mechanism** to detect and recover from disconnections
+- **Step-by-step reasoning visualization** showing AI thinking process
+- **Expandable reasoning steps** with confidence scores
+- **Real-time progress indicators** during generation
+- **Visual thinking animations** for better user experience
+- **Immediate cancellation** with state preservation
+- **Stop/resume functionality** during generation
+- **Session management** for concurrent streams
+- **Resource cleanup** on connection close
+
+### 3. 🔗 RAG (Retrieval-Augmented Generation)
+
+#### Vector Store Integration
+
+- **Qdrant vector database** for efficient similarity search
+- **Automatic embedding generation** for text and documents
+- **Metadata storage** for source attribution and versioning
+- **Index optimization** for fast retrieval
+
+#### Context Management
+
+- **Intelligent context window management** with token optimization
+- **Cross-conversation retrieval** of relevant historical context
+- **File reference integration** for multimodal content
+- **Automatic context pruning** to stay within model limits
+
+#### Retrieval Pipeline
+
+- **Semantic search** across conversation history
+- **Hybrid search** combining semantic and keyword matching
+- **Relevance scoring** with configurable thresholds
+- **Source attribution** showing where information came from
+
+### 4. ✨ Multimodal Processing
+
+#### Image Processing
+
+- **Image upload and validation** (PNG, JPG, WebP formats)
+- **Automatic resizing and optimization** for LLM consumption
+- **OCR text extraction** using EasyOCR integration
+- **Base64 encoding** for seamless LLM integration
+- **Metadata extraction** (dimensions, format, size)
+
+#### Document Processing
+
+- **PDF parsing** with pypdf for text extraction
+- **DOCX processing** with python-docx integration
+- **Content summarization** for large documents
+- **Structured data preparation** for LLM context
+- **File size limits** with intelligent truncation
+
+#### Multimodal Integration
+
+- **Automatic context inclusion** of file content in conversations
+- **File reference tracking** across conversations
+- **Thumbnail generation** for visual previews
+- **Progress tracking** during file processing
+
+### 5. ⚡ Hardware Acceleration
+
+#### Automatic Detection
+
+- **CUDA detection** for NVIDIA GPUs with VRAM measurement
+- **ROCm detection** for AMD GPUs on Linux systems
+- **Metal detection** for Apple Silicon Macs
+- **CPU fallback** with optimization recommendations
+- **Cross-platform compatibility** checks
+
+#### Intelligent Quantization
+
+- **VRAM-aware quantization selection** based on available memory
+- **Backend-specific quantization hierarchies** for optimal performance
+- **Automatic fallback** to CPU-safe options when needed
+- **Performance optimization** based on hardware capabilities
+
+#### Optimization Features
+
+- **Model loading optimization** for available hardware
+- **Memory management** with automatic cleanup
+- **Performance monitoring** with real-time feedback
+- **Hardware utilization display** in UI
+
+### 6. 🤖 GGUF Runtime & Model Management
+
+#### Complete GGUF Integration
+
+- **GGUF model management system** with full API support
+- **HuggingFace integration** for direct model downloads
+- **Local model registry** for organizing GGUF files
+- **Hardware compatibility checking** before model usage
+
+#### Model Operations
+
+- **Upload GGUF models** from local storage
+- **Download from HuggingFace** with progress tracking
+- **Model validation** ensuring file integrity
+- **Metadata extraction** from GGUF files
+- **Model deletion** with cleanup
+
+#### WebSocket Progress Tracking
+
+- **Real-time download progress** via WebSocket
+- **Cancelable downloads** with cleanup
+- **Progress visualization** in UI
+- **Error handling** with user feedback
+
+### 7. 🧠 Knowledge Graph & Memory System
+
+#### Conversation Memory
+
+- **Persistent conversation storage** with relationship tracking
+- **Entity extraction** and relationship mapping
+- **Semantic linking** between related conversations
+- **Memory consolidation** over time
+
+#### Knowledge Organization
+
+- **Topic clustering** for better organization
+- **Cross-reference creation** between related content
+- **Temporal tracking** of conversation evolution
+- **Import/export functionality** for knowledge transfer
+
+#### Search Capabilities
+
+- **Semantic search** across stored knowledge
+- **Relationship traversal** through connected entities
+- **Context-aware retrieval** based on current conversation
+- **Relevance ranking** of retrieved memories
+
+>>>>>>> 3e9ec69d40b2988c5acfbad2467471e0aab9a88c
 ---
 
 ## 🧪 Testing Strategy
@@ -241,6 +405,7 @@ Docker:
 
 ```
 lm-webui/
+<<<<<<< HEAD
 ├── 📁 backend/                    # FastAPI backend (Port: 8000)
 │   ├── app/                      # Application code
 │   │   ├── routes/              # API endpoints (REST + WebSocket)
@@ -298,6 +463,46 @@ lm-webui/
 ├── 📄 .gitignore              # Git ignore rules
 ├── 📄 .npmrc                  # npm configuration
 └── 📄 .prettierrc             # Code formatting configuration
+=======
+├── 📁 backend/                    # FastAPI backend
+│   ├── app/                      # Application code
+│   │   ├── routes/              # API endpoints
+│   │   ├── services/            # Business logic
+│   │   ├── rag/                 # RAG engine
+│   │   ├── hardware/            # Hardware abstraction
+│   │   └── database/            # Data persistence
+│   └── tests/                   # Backend tests
+├── 📁 frontend/                  # React + TypeScript frontend
+│   ├── src/
+│   │   ├── components/          # UI components
+│   │   ├── features/            # Feature modules
+│   │   ├── store/              # State management
+│   │   ├── services/           # API services
+│   │   └── types/core/         # Unified type definitions
+│   └── tests/                  # Frontend tests
+├── 📁 docs/                     # Documentation
+│   ├── implementation/         # Implementation details
+│   ├── prompts/               # Prompt templates
+│   └── testing/               # Test documentation
+├── 📁 scripts/                 # Utility scripts
+│   ├── debug/                 # Debug scripts
+│   └── tests/                 # Test utilities
+├── 📁 examples/                # Example configurations
+│   └── samples/               # Sample files
+├── 📁 .github/                 # GitHub configuration
+│   ├── workflows/             # CI/CD pipelines
+│   ├── ISSUE_TEMPLATE/        # Issue templates
+│   └── instructions/          # Development instructions
+├── 📄 LICENSE                  # MIT License
+├── 📄 CONTRIBUTING.md          # Contribution guidelines
+├── 📄 README.md                # Project documentation
+├── 📄 architecture.md          # Architecture documentation
+├── 📄 DEPLOYMENT.md            # Deployment instructions
+├── 📄 docker-compose.yml       # Docker Compose configuration
+├── 📄 Dockerfile               # Docker build configuration
+├── 📄 install.sh               # One-line installation script
+└── 📄 cleanup_repository.sh    # Repository organization script
+>>>>>>> 3e9ec69d40b2988c5acfbad2467471e0aab9a88c
 ```
 
 ---

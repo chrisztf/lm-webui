@@ -84,10 +84,9 @@ Access the application at `http://localhost:7070`
 For detailed documentation, see the [`docs/`](./docs/) directory:
 
 - **[Getting Started](./docs/getting-started.md)** - Complete setup guide
-- **[Features](./docs/features.md)** - Detailed feature documentation
-- **[API Reference](./docs/api-reference.md)** - Complete API documentation
-- **[Deployment](./docs/deployment.md)** - Production deployment guides
-- **[Contributing](./docs/contributing.md)** - How to contribute to the project
+- **[Features](./docs/architecture.md)** - Detailed feature documentation
+- **[Deployment](./docs/DEPLOYMENT.md)** - Production deployment guides
+- **[Contributing](./CONTRIBUTING.md)** - How to contribute to the project
 
 ---
 
@@ -228,8 +227,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <p align="center">
   <a href="https://star-history.com/#lm-webui/lm-webui&Date">
-    <img src="https://api.star-history.com/svg?repos=lm-webui/lm-webui&type=Date&theme=dark" />
+    <img src="https://api.star-history.com/svg?repos=lm-webui/lm-webui&theme=dark"/>
   </a>
 </p>
 
+<<<<<<< HEAD
 Let’s shape the future of local AI together 🤜🤛
+=======
+<p align="center">
+  <b></b>Let’s shape the future of local AI together 🤜🤛</b>
+</p>
+>>>>>>> 3e9ec69d40b2988c5acfbad2467471e0aab9a88c
