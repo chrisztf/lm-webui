@@ -227,6 +227,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 ## ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=lm-webui/lm-webui&type=Date)](https://star-history.com/#lm-webui/lm-webui&Date)
+<p align="center">
+  <a href="https://star-history.com/#lm-webui/lm-webui&Date=dark">
+    <img src="https://api.star-history.com/svg?repos=lm-webui/lm-webui&type=Date" />
+  </a>
+</p>
 
 lm-webui focuses on **operational clarity over abstraction**—providing the building blocks required to deploy, govern, and scale local AI systems without surrendering control to opaque cloud platforms.
