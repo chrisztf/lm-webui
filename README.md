@@ -84,10 +84,9 @@ Access the application at `http://localhost:7070`
 For detailed documentation, see the [`docs/`](./docs/) directory:
 
 - **[Getting Started](./docs/getting-started.md)** - Complete setup guide
-- **[Features](./docs/features.md)** - Detailed feature documentation
-- **[API Reference](./docs/api-reference.md)** - Complete API documentation
+- **[Features](./docs/architecture.md)** - Detailed feature documentation
 - **[Deployment](./docs/deployment.md)** - Production deployment guides
-- **[Contributing](./docs/contributing.md)** - How to contribute to the project
+- **[Contributing](./contributing.md)** - How to contribute to the project
 
 ---
 
@@ -231,5 +230,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   </a>
 </p>
 
-
-Let’s shape the future of local AI together 🤜🤛
+<p align="center">
+  <b></b>Let’s shape the future of local AI together 🤜🤛</b>
+</p>
