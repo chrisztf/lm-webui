@@ -131,23 +131,43 @@ If you need maximum performance on Apple Silicon, run the backend natively:
 
 The following data is persisted using Docker volumes and local directories:
 
-- **Database & Vector Store**: `./backend/data/` (Qdrant database, SQLite, memory)
-- **User Media**: `./backend/media/` (Uploads, generated images, thumbnails, documents)
-- **Local Models**: `./backend/models/` (GGUF model files)
+- **Database & Vector Store**: Docker volume `lm-webui_app_data` (mounted at `/backend/data` in container)
+- **User Media**: Docker volume `lm-webui_app_media` (mounted at `/backend/media` in container)
+- **Local Models**: `./backend/models/` on host (mounted to `/backend/data/models` in container)
 - **RAG Models**: `./backend/rag/` (RAG model files)
 - **Build Cache**: Docker volume for JIT compilation speedups
+- **Configuration**: `./backend/config.yaml` on host (mounted to `/backend/config.yaml` in container)
+- **Secrets**: `./backend/.secrets/` on host (mounted to `/backend/.secrets` in container)
 
 This ensures that your conversation history, knowledge graph, uploaded files, and downloaded models survive container restarts.
 
-**Directory Structure:**
+**Accessing Docker Volume Data:**
+
+To access data stored in Docker volumes:
+
+```bash
+# List volumes
+docker volume ls
+
+# Inspect a volume
+docker volume inspect lm-webui_app_data
+
+# Backup a volume
+docker run --rm -v lm-webui_app_data:/data -v $(pwd):/backup alpine tar czf /backup/backup.tar.gz -C /data .
+
+# Restore to a volume
+docker run --rm -v lm-webui_app_data:/data -v $(pwd):/backup alpine sh -c "cd /data && tar xzf /backup/backup.tar.gz --strip 1"
+```
+
+**Directory Structure in Container:**
 
 ```
-./backend/data/
+/backend/data/
 ├── sql_db/        # SQlite database
 ├── qdrant_db/     # Vector database for RAG
 └── memory/        # Knowledge graph database
 
-./backend/media/
+/backend/media/
 ├── uploads/       # User uploaded files
 ├── thumbnails/    # Generated thumbnails
 └── generated/     # AI-generated content
@@ -155,14 +175,13 @@ This ensures that your conversation history, knowledge graph, uploaded files, an
     ├── documents/
     └── exports/
 
-./backend/rag/
-├── embed/         # emebing model
+/backend/rag/
+├── embed/         # embedding model
 ├── ocr/           # ocr model
 ├── rerank/        # rerank model
 └── vision/        # vision model
 
-./backend/models/  # downloaded local GGUF models directory
-
+/backend/data/models/  # downloaded local GGUF models directory (mounted from host ./backend/models/)
 ```
 
 ## 🛠️ Troubleshooting

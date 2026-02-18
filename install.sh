@@ -142,9 +142,8 @@ EOF
     mkdir -p ./backend/models
     log_info "Created models directory at ./backend/models"
     
-    # Create data directories
-    mkdir -p ./data ./media
-    log_info "Created data directories"
+    # Note: Docker uses volumes for data and media, not host directories
+    log_info "Docker volumes will be created automatically for data and media storage"
 }
 
 # Clone or use existing repository
@@ -220,9 +219,11 @@ show_instructions() {
     echo -e "  3. Place GGUF models in ${YELLOW}./backend/models/${NC} for local inference"
     echo ""
     echo -e "${BLUE}Useful directories:${NC}"
-    echo -e "  • Models: ${YELLOW}./backend/models/${NC}"
-    echo -e "  • Data: ${YELLOW}./data/${NC}"
-    echo -e "  • Media: ${YELLOW}./media/${NC}"
+    echo -e "  • Models: ${YELLOW}./backend/models/${NC} (mounted to container)"
+    echo -e "  • Data: ${YELLOW}Docker volume (lm-webui_app_data)${NC}"
+    echo -e "  • Media: ${YELLOW}Docker volume (lm-webui_app_media)${NC}"
+    echo -e "  • Config: ${YELLOW}./backend/config.yaml${NC}"
+    echo -e "  • Secrets: ${YELLOW}./backend/.secrets/${NC}"
     echo ""
     echo -e "${GREEN}Enjoy your local AI assistant! 🤖${NC}"
     echo ""

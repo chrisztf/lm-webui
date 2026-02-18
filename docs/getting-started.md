@@ -4,7 +4,23 @@ Welcome to LM WebUI! This guide will help you get up and running quickly.
 
 ## Quick Start Options
 
-### Option 1: Docker (Recommended for Beginners)
+### Option 1: One-Line Installation (Recommended)
+
+```bash
+curl -sSL https://raw.githubusercontent.com/lm-webui/lm-webui/main/install.sh | bash
+```
+
+This will:
+
+- Check for Docker and Docker Compose
+- Clone the repository (if needed)
+- Set up environment configuration
+- Build and start the Docker containers
+- Provide access instructions
+
+Access the application at `http://localhost:7070`
+
+### Option 2: Docker (Manual)
 
 ```bash
 # Clone the repository
@@ -14,10 +30,10 @@ cd lm-webui
 # Start all services with Docker Compose
 docker-compose up
 
-# Access the application at http://localhost:5178
+# Access the application at http://localhost:7070
 ```
 
-### Option 2: Manual Installation (For Developers)
+### Option 3: Manual Installation (For Developers)
 
 ```bash
 # 1. Clone the repository
@@ -44,11 +60,13 @@ cd frontend && npm run dev
 # Access at http://localhost:5178
 ```
 
+**Note**: Docker installation uses port 7070, manual installation uses port 5178.
+
 ## First Steps
 
 ### 1. Create an Account
 
-1. Open `http://localhost:5178` in your browser
+1. Open `http://localhost:7070` (Docker) or `http://localhost:5178` (manual) in your browser
 2. Click "Register" to create a new account
 3. Enter your email and password
 4. You'll be automatically logged in after registration

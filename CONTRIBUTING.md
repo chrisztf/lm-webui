@@ -21,7 +21,7 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 2. **Clone your fork** locally:
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/lm-webui.git
+   git clone https://github.com/lm-webui/lm-webui.git
    cd lm-webui
    ```
 

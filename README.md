@@ -38,58 +38,38 @@ Built for developers, system integrators, and organizations that require **local
 
 ## 🚀 Quick Start
 
-### With Docker (Recommended)
+### One-Line Installation (Recommended)
 
 ```bash
-# Clone the repository
-git clone https://github.com/lm-webui/lm-webui.git
-cd lm-webui
-
-# Start with Docker Compose
-docker-compose up
+curl -sSL https://raw.githubusercontent.com/lm-webui/lm-webui/main/install.sh | bash
 ```
 
-### Manual Installation
+This will:
 
-```bash
-# Backend setup
-cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
+1. Check for Docker and Docker Compose
+2. Clone the repository (if needed)
+3. Set up environment configuration
+4. Build and start the Docker containers
+5. Provide access instructions
 
-# Frontend setup
-cd ../frontend
-npm install
-
-# Start both services
-# Terminal 1: Backend
-cd backend && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-
-# Terminal 2: Frontend
-cd frontend && npm run dev
-```
-
-Access the application at `http://localhost:5178`
+Access the application at `http://localhost:7070`
 
 ---
 
 ## ⚡ Core Features
 
-| Feature                      | Capabilities                                                 |
-| ---------------------------- | ------------------------------------------------------------ |
-| 🔐 **Authentication**        | JWT-based auth with refresh tokens and user sessions         |
-| 🌐 **WebSocket Streaming**   | Real-time token streaming with interactive reasoning display |
-| 🔗 **RAG Engine**            | Configurable retrieval pipelines with Qdrant vector store    |
-| 👁️ **Multimodal Processing** | Image/document upload with OCR and content extraction        |
-| ⚡ **Hardware Acceleration** | Automatic CUDA/ROCm/Metal detection with VRAM optimization   |
-| 🤖 **GGUF Runtime**          | Complete GGUF model management with HuggingFace integration  |
-| 🧠 **Knowledge Graph**       | Conversation memory and entity relationship tracking         |
-| 🔍 **Semantic Search**       | Vector-based similarity search across conversations          |
-| 📱 **Real-time Updates**     | Live title updates and conversation synchronization          |
-| 🏠 **Self-Hosted Ready**     | Effortless on-prem, private cloud, and isolated deployments  |
+| Feature                   | Capabilities                                                                                                                                       |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Authentication**        | Secure JWT-based authentication with refresh tokens and persistent user sessions. Designed for multi-user deployments and role-aware environments. |
+| **WebSocket Streaming**   | Bidirectional streaming with structured events, typing indicators, cancellation support, and step-by-step reasoning visibility.                    |
+| **Hardware Acceleration** | Automatic CUDA, ROCm, and Metal detection with dynamic Memory and Layer optimization for efficient local execution across GPUs and CPUs.           |
+| **GGUF Runtime**          | Built-in GGUF model lifecycle management download, load, quantize, and serve models locally with HuggingFace compatibility.                        |
+| **RAG Engine**            | Modular retrieval pipeline powered by Qdrant for vector search, reranking, semantic chunking, and context injection.                               |
+| **Multimodal Processing** | Image and document processing with OCR, embedding, and structured content extraction for unified chat workflows.                                   |
+| **Knowledge Graph**       | Triplet-based semantic memory and entity relationship tracking to enhance long-term contextual understanding.                                      |
+| **Self-Hosted Ready**     | Effortless on-prem, private cloud, and isolated deployments with no required external telemetry.                                                   |
 
-### 🎯 GGUF Runtime Highlights
+### 🤗 GGUF Runtime Highlights
 
 - **Model Management**: Upload/download GGUF models with progress tracking
 - **HuggingFace Integration**: Direct download from HuggingFace repositories
@@ -111,7 +91,7 @@ For detailed documentation, see the [`docs/`](./docs/) directory:
 
 ---
 
-## 🏗️ Architecture Overview
+## </> Architecture Overview
 
 lm-webui follows a modern microservices-inspired architecture:
 
@@ -148,6 +128,22 @@ lm-webui/
 
 ### Development Setup
 
+For development work, you can use either the Docker-based setup or manual installation:
+
+#### Docker-based Development
+
+```bash
+# Quick setup using the installation script
+curl -sSL https://raw.githubusercontent.com/lm-webui/lm-webui/main/install.sh | bash
+
+# Or manually with Docker Compose
+git clone https://github.com/lm-webui/lm-webui.git
+cd lm-webui
+docker-compose up --build
+```
+
+#### Manual Development Setup
+
 ```bash
 # 1. Clone and setup
 git clone https://github.com/lm-webui/lm-webui.git
@@ -171,7 +167,7 @@ cd ../frontend && npm test
 
 ---
 
-## 📊 Roadmap & Known Limitations
+## 📝 Roadmap & Known Limitations
 
 ### Known Limitations
 
@@ -228,4 +224,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-lm-webui focuses on **operational clarity over abstraction**—providing the building blocks required to deploy, govern, and scale local AI systems without surrendering control to opaque cloud platforms.
+<p align="center">
+  <a href="https://star-history.com/#lm-webui/lm-webui&Date">
+    <img src="https://api.star-history.com/svg?repos=lm-webui/lm-webui&type=Date&theme=dark" />
+  </a>
+</p>
+
+Let’s shape the future of local AI together 🤜🤛

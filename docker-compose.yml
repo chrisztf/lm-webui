@@ -9,20 +9,22 @@ services:
       - "7070:8000" # Expose port 8000 (FastAPI backend) to host port 7070
     volumes:
       # Persistent System Data (Qdrant, SQLite, Models)
-      - app_data:/data
+      - app_data:/backend/data
       # Persistent User Media (Uploads, Generated Images, Thumbnails)
-      - app_media:/media
+      - app_media:/backend/media
       # Config Override (allows changing config without rebuilding)
       - ./backend/config.yaml:/backend/config.yaml
       # Persistent Build Cache (for JIT compilation speedups)
       - build_cache:/app/persistent_build
       # Mount models directory for easier model management (Optional, from previous setup)
-      - ./backend/models:/data/models
+      - ./backend/models:/backend/data/models
       # Mount secrets directory for encryption keys
       - ./backend/.secrets:/backend/.secrets
     environment:
-      - HF_HOME=/data/models
+      - HF_HOME=/backend/data/models
       - CONFIG_PATH=/backend/config.yaml
+      - APP_PATHS_DATA_DIR=/backend/data
+      - APP_PATHS_MEDIA_DIR=/backend/media
     restart: unless-stopped
     deploy:
       resources:

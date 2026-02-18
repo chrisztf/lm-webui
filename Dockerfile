@@ -53,10 +53,7 @@ RUN mkdir -p /backend/data/qdrant_db \
 
 # 6. Environment Setup
 ENV PYTHONPATH=/backend
-ENV HF_HOME=/backend/models
 ENV CONFIG_PATH=/backend/config.yaml
-ENV DATA_DIR=/backend/data
-ENV MEDIA_DIR=/backend/media
 
 # 7. Healthcheck (Checks FastAPI endpoint)
 # Note: Using /api/health as defined in main.py
