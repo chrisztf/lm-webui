@@ -38,6 +38,7 @@ python-pptx
 pylightxl
 xlrd
 markdown
+beautifulsoup4
 
 # Image & OCR
 Pillow>=10.2.0

@@ -66,8 +66,10 @@ backend/thumbnails/*
 backend/models/*
 !backend/models/.keep
 backend/app/files/*
-backend/media/*
-!backend/media/.keep
+backend/media/generated*
+!backend/media/generated.keep
+backend/media/uploads*
+!backend/media/uploads.keep
 *.db
 *.sqlite
 *.sqlite3
