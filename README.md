@@ -231,10 +231,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   </a>
 </p>
 
-<<<<<<< HEAD
-Let’s shape the future of local AI together 🤜🤛
-=======
 <p align="center">
   <b></b>Let’s shape the future of local AI together 🤜🤛</b>
 </p>
->>>>>>> 3e9ec69d40b2988c5acfbad2467471e0aab9a88c
