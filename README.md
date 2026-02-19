@@ -1,4 +1,7 @@
-# LM WebUI 
+# LM WebUI 🛡️
+
+**lm-webui** is a unified Local AI interface and LLM runtime platform, built for privacy-first and sovereign AI systems.
+Native support for run local GGUF model inference, Ollama and API-based models like OpenAI and Gemini, with multimodal RAG pipelines, and persistent vector memory.
 
 <p align="center">
   <img src="./assets/demo.png" width="1080" />
@@ -25,12 +28,10 @@
 
 ---
 
-**lm-webui** is a unified Local AI interface and LLM runtime platform, built for privacy-first and sovereign AI systems.
-Native support for run local GGUF model inference, Ollama and API-based models like OpenAI and Gemini, with multimodal RAG pipelines, and persistent vector memory.
-
 Built open-source for comunity, developers, system integrators, and organizations that require **local inference, reproducibility, and infrastructure-level control**, lm-webui bridges the power of modern cloud LLM features with the integrity of local data ownership.
 
 Run fully offline, integrate with cloud APIs when needed, and deploy across environments without sacrificing performance, privacy, or sovereignty.
+
 
 > ⚠️ **Work in Progress (WIP)**
 > lm-webui is under active development. Features, APIs, and architecture may change as the project evolves. Contributions, feedback, and early testing are welcome, but expect breaking changes.
