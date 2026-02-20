@@ -42,7 +42,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install frontend dependencies
-        run: cd frontend && npm ci
+        run: cd frontend && npm install
 
       - name: Run TypeScript type check
         run: cd frontend && npm run typecheck || true
@@ -73,7 +73,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install frontend dependencies
-        run: cd frontend && npm ci
+        run: cd frontend && npm install
 
       - name: Audit npm dependencies
         run: cd frontend && npm audit --audit-level=high || echo "npm audit found issues that need to be addressed"
