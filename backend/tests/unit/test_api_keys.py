@@ -14,7 +14,7 @@ class TestAPIKeys:
             "password": "testpass123",
             "device_id": "test-device"
         }
-        client.post("/auth/register", json=user_data)
+        client.post("/api/auth/register", json=user_data)
         
         login_data = {
             "username": user_data["username"],
@@ -22,7 +22,7 @@ class TestAPIKeys:
             "remember_me": True,
             "device_id": "test-device"
         }
-        login_response = client.post("/auth/login", json=login_data)
+        login_response = client.post("/api/auth/login", json=login_data)
         token = login_response.json()["access_token"]
         
         headers = {"Authorization": f"Bearer {token}"}
@@ -46,7 +46,7 @@ class TestAPIKeys:
             "password": "testpass123",
             "device_id": "test-device"
         }
-        client.post("/auth/register", json=user_data)
+        client.post("/api/auth/register", json=user_data)
         
         login_data = {
             "username": user_data["username"],
@@ -54,7 +54,7 @@ class TestAPIKeys:
             "remember_me": True,
             "device_id": "test-device"
         }
-        login_response = client.post("/auth/login", json=login_data)
+        login_response = client.post("/api/auth/login", json=login_data)
         token = login_response.json()["access_token"]
         
         headers = {"Authorization": f"Bearer {token}"}
@@ -80,7 +80,7 @@ class TestAPIKeys:
             "password": "testpass123",
             "device_id": "test-device"
         }
-        client.post("/auth/register", json=user_data)
+        client.post("/api/auth/register", json=user_data)
         
         login_data = {
             "username": user_data["username"],
@@ -88,7 +88,7 @@ class TestAPIKeys:
             "remember_me": True,
             "device_id": "test-device"
         }
-        login_response = client.post("/auth/login", json=login_data)
+        login_response = client.post("/api/auth/login", json=login_data)
         token = login_response.json()["access_token"]
         
         headers = {"Authorization": f"Bearer {token}"}
@@ -114,7 +114,7 @@ class TestAPIKeys:
             "password": "testpass123",
             "device_id": "test-device"
         }
-        client.post("/auth/register", json=user_data)
+        client.post("/api/auth/register", json=user_data)
         
         login_data = {
             "username": user_data["username"],
@@ -122,7 +122,7 @@ class TestAPIKeys:
             "remember_me": True,
             "device_id": "test-device"
         }
-        login_response = client.post("/auth/login", json=login_data)
+        login_response = client.post("/api/auth/login", json=login_data)
         token = login_response.json()["access_token"]
         
         headers = {"Authorization": f"Bearer {token}"}
@@ -158,7 +158,7 @@ class TestAPIKeys:
             "password": "testpass123",
             "device_id": "test-device"
         }
-        client.post("/auth/register", json=user_data)
+        client.post("/api/auth/register", json=user_data)
         
         login_data = {
             "username": user_data["username"],
@@ -166,7 +166,7 @@ class TestAPIKeys:
             "remember_me": True,
             "device_id": "test-device"
         }
-        login_response = client.post("/auth/login", json=login_data)
+        login_response = client.post("/api/auth/login", json=login_data)
         token = login_response.json()["access_token"]
         
         headers = {"Authorization": f"Bearer {token}"}
@@ -189,7 +189,7 @@ class TestAPIKeys:
             "password": "testpass123",
             "device_id": "test-device"
         }
-        client.post("/auth/register", json=user_data)
+        client.post("/api/auth/register", json=user_data)
         
         login_data = {
             "username": user_data["username"],
@@ -197,7 +197,7 @@ class TestAPIKeys:
             "remember_me": True,
             "device_id": "test-device"
         }
-        login_response = client.post("/auth/login", json=login_data)
+        login_response = client.post("/api/auth/login", json=login_data)
         token = login_response.json()["access_token"]
         
         headers = {"Authorization": f"Bearer {token}"}

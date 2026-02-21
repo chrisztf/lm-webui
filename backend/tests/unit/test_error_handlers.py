@@ -15,7 +15,7 @@ class TestErrorHandlers:
     def test_405_method_not_allowed(self, client):
         """Test 405 error handling for invalid HTTP methods"""
         # Try POST on a GET-only endpoint
-        response = client.post("/auth/me")
+        response = client.post("/api/auth/me")
         assert response.status_code == 405
         assert "error" in response.json()
     
@@ -26,7 +26,7 @@ class TestErrorHandlers:
             "username": "",  # Empty username
             "password": "short"  # Too short password
         }
-        response = client.post("/auth/register", json=invalid_data)
+        response = client.post("/api/auth/register", json=invalid_data)
         assert response.status_code == 422
         assert "detail" in response.json()
     
@@ -64,7 +64,7 @@ class TestErrorHandlers:
         assert isinstance(error_data["timestamp"], str)
         
         # Test 405
-        response = client.post("/auth/me")
+        response = client.post("/api/auth/me")
         assert response.status_code == 405
         error_data = response.json()
         assert "error" in error_data
