@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     ninja-build \
     pkg-config \
+    && apt-get upgrade -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Python Dependencies (Layered for caching)
