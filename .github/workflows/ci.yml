@@ -1,4 +1,4 @@
-name: Simplified AI Platform CI
+name: AI Platform CI
 
 on:
   push:
@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: ["main"]
 
-# Add permissions for CodeQL
 permissions:
   contents: read
   security-events: write
@@ -15,168 +14,233 @@ permissions:
 
 env:
   PYTHON_VERSION: "3.13"
-  NODE_VERSION: "24.13"
+  NODE_VERSION: "24"
   IMAGE_NAME: lm-webui
+
+# Cancel in-progress runs on same branch to save resources
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   # ----------------------------------------
   # STAGE 1: VALIDATE & TEST (Parallel)
   # ----------------------------------------
-  validate:
-    name: Code Quality & Security
+  lint:
+    name: Code Quality
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
-      # Python setup
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
 
-      # Install Python tools
-      - name: Install Python dependencies
-        run: |
-          pip install ruff mypy pip-audit pytest pytest-cov
-          cd backend && pip install -r requirements.txt
+      - name: Install lint tools
+        run: pip install ruff mypy
 
-      # Code quality checks (non-blocking for now)
-      - name: Run Ruff linting
-        run: ruff check backend || echo "Ruff found issues that need addressing"
+      - name: Ruff lint (blocking)
+        run: ruff check backend
 
-      - name: Run mypy type checking
-        run: mypy backend || echo "Type checking found issues"
+      - name: Mypy type check (blocking)
+        run: mypy backend --ignore-missing-imports
 
-      # Security scanning
-      - name: Audit Python dependencies
-        run: cd backend && pip-audit || echo "pip-audit found security issues"
-
-      # Node.js setup
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
 
-      # Frontend checks
-      - name: Install frontend dependencies
-        run: cd frontend && npm install
+      - name: Install frontend deps
+        run: cd frontend && npm ci
 
-      - name: Run TypeScript type check
-        run: cd frontend && npm run typecheck || echo "TypeScript type errors found"
-
-      - name: Audit npm dependencies
-        run: cd frontend && npm audit --audit-level=high || echo "npm audit found security issues"
+      - name: TypeScript type check (blocking)
+        run: cd frontend && npm run typecheck
 
   test:
     name: Unit & AI Tests
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
 
       - name: Install backend dependencies
+        run: cd backend && pip install -r requirements.txt pytest pytest-cov
+
+      - name: Run backend unit tests
         run: |
           cd backend
-          pip install -r requirements.txt
-          pip install pytest pytest-cov
+          python -m pytest tests/ -v \
+            --cov=app \
+            --cov-report=xml \
+            --cov-fail-under=60 \   # Enforce minimum 60% coverage
+            -x                        # Stop on first failure
 
-      # Run backend tests (non-blocking due to current issues)
-      - name: Run backend tests
-        run: |
-          cd backend
-          python -m pytest tests/ -v --cov=app --cov-report=xml --cov-fail-under=0 || echo "Tests failed - continuing for now"
-
-      - name: Upload backend coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
         with:
           file: ./backend/coverage.xml
           flags: backend
+          fail_ci_if_error: false # Don't fail CI on Codecov outage
 
-      # AI-specific smoke tests
-      - name: Run AI functionality smoke test
+      - name: AI smoke test
         run: |
           cd backend
           python -c "
-          # Basic AI platform smoke test
-          try:
-              # Test model loading capability
-              from app.services.model_registry import ModelRegistry
-              print('✓ ModelRegistry import successful')
-              
-              # Test RAG components
-              from app.rag.processor import DocumentProcessor
-              print('✓ RAG components import successful')
-              
-              # Test API routes exist
-              from app.main import app
-              routes = [route.path for route in app.routes]
-              ai_routes = [r for r in routes if 'chat' in r or 'rag' in r or 'inference' in r]
-              print(f'✓ Found {len(ai_routes)} AI-related routes')
-              
-              print('AI platform smoke test passed')
-          except Exception as e:
-              print(f'AI smoke test warning: {e}')
-              print('Continuing pipeline - AI components may need setup')
+          import sys
+
+          # Test model registry
+          from app.services.model_registry import ModelRegistry
+          print('✓ ModelRegistry import OK')
+
+          # Test RAG components
+          from app.rag.processor import DocumentProcessor
+          print('✓ RAG DocumentProcessor import OK')
+
+          # Test all AI routes are registered
+          from app.main import app
+          routes = [r.path for r in app.routes]
+          required = ['/api/chat/completions', '/api/rag', '/api/inference']
+          missing = [r for r in required if r not in routes]
+          if missing:
+              print(f'✗ Missing AI routes: {missing}')
+              sys.exit(1)
+          print(f'✓ All {len(required)} required AI routes present')
+
+          print('AI smoke test PASSED')
           "
 
-      # Frontend tests
-      - name: Run frontend tests
-        run: |
-          cd frontend
-          npm test -- --coverage || echo "Frontend tests failed - continuing"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
 
-      - name: Upload frontend coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Install frontend deps
+        run: cd frontend && npm ci
+
+      - name: Run frontend tests
+        run: cd frontend && npm test -- --coverage --watchAll=false
+
+      - name: Upload frontend coverage
+        uses: codecov/codecov-action@v4
         with:
           directory: frontend/coverage
           flags: frontend
+          fail_ci_if_error: false
 
   # ----------------------------------------
-  # STAGE 2: BUILD & SECURE (Depends on validate, test)
+  # STAGE 2: SECURITY SCANNING (Parallel with tests)
   # ----------------------------------------
-  build:
-    name: Build & Security Scan
+  security:
+    name: Security Scanning
     runs-on: ubuntu-latest
-    needs: [validate, test]
-
-    # Explicit permissions for security events (needed for fork PRs)
     permissions:
-      security-events: read
       contents: read
+      security-events: write
 
     steps:
       - uses: actions/checkout@v4
 
-      # API contract validation
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
 
-      - name: Install backend dependencies
-        run: cd backend && pip install -r requirements.txt
+      - name: Install dependencies for audit
+        run: cd backend && pip install -r requirements.txt pip-audit
 
-      - name: Validate OpenAPI schema
+      - name: Python dependency audit (CRITICAL only)
         run: |
           cd backend
-          python -c "from app.main import app; import json; schema = json.dumps(app.openapi()); print(f'OpenAPI schema generated ({len(schema)} bytes)')"
-          echo "API contract validation passed"
+          pip-audit --severity critical --format json -o pip-audit.json || true
+          # Fail on critical CVEs, warn on high
+          pip-audit --severity critical
 
-      # Docker build with security scanning
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend deps
+        run: cd frontend && npm ci
+
+      - name: npm audit (high+critical only)
+        run: cd frontend && npm audit --audit-level=high
+
+      - name: CodeQL Analysis
+        uses: github/codeql-action/init@v3
+        with:
+          languages: python, javascript
+
+      - name: CodeQL Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: CodeQL Analysis Results
+        uses: github/codeql-action/analyze@v3
+        with:
+          output: codeql-results.sarif
+
+  # ----------------------------------------
+  # STAGE 3: BUILD & CONTAINER SCAN (Depends on lint, test, security)
+  # ----------------------------------------
+  build:
+    name: Build & Container Scan
+    runs-on: ubuntu-latest
+    needs: [lint, test, security]
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install backend deps
+        run: cd backend && pip install -r requirements.txt
+
+      - name: Validate OpenAPI contract
+        run: |
+          cd backend
+          python -c "
+          from app.main import app
+          import json
+          schema = app.openapi()
+          # Validate required fields exist
+          assert 'info' in schema, 'OpenAPI missing info'
+          assert 'paths' in schema, 'OpenAPI missing paths'
+          print(f'✓ OpenAPI schema valid: {len(schema[\"paths\"])} endpoints')
+          "
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image (reproducible)
-        run: docker build --no-cache -t $IMAGE_NAME:test .
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          tags: ${{ env.IMAGE_NAME }}:test
+          cache-from: type=gha # Use GitHub Actions cache
+          cache-to: type=gha,mode=max # Persist cache between runs
 
-      - name: Scan container for vulnerabilities
+      - name: Trivy container scan
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.IMAGE_NAME }}:test
           severity: CRITICAL,HIGH
-          exit-code: "0"
+          exit-code: "1" # Fail on CRITICAL/HIGH — enforce this
           format: "sarif"
           output: "trivy-results.sarif"
           skip-files: |
@@ -184,15 +248,27 @@ jobs:
             **/blobs/**
             **/rerank/**
 
-      - name: Upload Trivy scan results
-        uses: github/codeql-action/upload-sarif@v4
+      - name: Upload Trivy results
+        if: always() # Upload even on failure for visibility
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: "trivy-results.sarif"
 
+      # Cache image for deploy job to avoid rebuilding
+      - name: Export Docker image
+        run: docker save ${{ env.IMAGE_NAME }}:test | gzip > image.tar.gz
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: image.tar.gz
+          retention-days: 1
+
   # ----------------------------------------
-  # STAGE 3: DEPLOY & VERIFY (Depends on build)
+  # STAGE 4: RUNTIME VERIFICATION (Depends on build)
   # ----------------------------------------
-  deploy:
+  deploy-verify:
     name: Runtime Verification
     runs-on: ubuntu-latest
     needs: build
@@ -200,39 +276,55 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build image for runtime test
-        run: docker build -t $IMAGE_NAME:test .
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
 
-      - name: Run container and verify health
+      - name: Load Docker image
+        run: docker load < image.tar.gz # Reuse built image, don't rebuild
+
+      - name: Run container health verification
         run: |
-          docker run -d -p 8000:8000 --name app_test $IMAGE_NAME:test
-          sleep 15  # Give container time to start
+          docker run -d -p 8000:8000 --name app_test \
+            --health-cmd="curl -f http://localhost:8000/health || exit 1" \
+            --health-interval=5s \
+            --health-retries=5 \
+            ${{ env.IMAGE_NAME }}:test
 
-          # Test health endpoints
-          echo "Testing health endpoints..."
-          curl --fail --retry 5 --retry-delay 5 --retry-max-time 30 http://localhost:8000/health
-          curl --fail --retry 3 --retry-delay 2 http://localhost:8000/api/health
+          # Wait for healthy status instead of fixed sleep
+          echo "Waiting for container to be healthy..."
+          timeout 60 bash -c 'until [ "$(docker inspect --format="{{.State.Health.Status}}" app_test)" = "healthy" ]; do sleep 2; done'
+          echo "Container is healthy"
 
-          # Test AI service endpoint (if available)
-          echo "Testing AI service availability..."
-          curl -f http://localhost:8000/api/chat/completions -X POST -H "Content-Type: application/json" -d '{"messages":[{"role":"user","content":"test"}]}' || echo "AI endpoint may require authentication"
+          # Core health endpoints
+          curl --fail http://localhost:8000/health
+          curl --fail http://localhost:8000/api/health
 
-          echo "Container health verification passed"
+          # AI endpoint availability (auth expected — 401/403 is OK, 500 is not)
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST http://localhost:8000/api/chat/completions \
+            -H "Content-Type: application/json" \
+            -d '{"messages":[{"role":"user","content":"test"}]}')
+          if [ "$STATUS" = "500" ] || [ "$STATUS" = "000" ]; then
+            echo "✗ AI endpoint returned $STATUS — unexpected server error"
+            exit 1
+          fi
+          echo "✓ AI endpoint responded with $STATUS (auth expected)"
 
-      - name: Run Docker Compose integration test
+      - name: Docker Compose integration test
         run: |
           docker-compose up -d
-          sleep 30
+
+          # Wait for compose stack to be ready
+          timeout 60 bash -c 'until curl -sf http://localhost:7070/health; do sleep 3; done'
+          echo "✓ Compose stack healthy"
+
           docker-compose ps
-
-          # Test through docker-compose
-          echo "Testing docker-compose health..."
-          curl --fail http://localhost:7070/health
-
-          docker-compose logs --tail=20 backend
+          docker-compose logs --tail=30 backend
 
       - name: Cleanup
         if: always()
         run: |
           docker rm -f app_test || true
-          docker-compose down
+          docker-compose down --volumes
