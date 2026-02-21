@@ -6,4 +6,4 @@ app_config:
 llm_config:
   model_name: "Default Model"
   provider: "openai"
-  model: "gpt-4-turbo"
+  model: "gpt-4.1-mini"
